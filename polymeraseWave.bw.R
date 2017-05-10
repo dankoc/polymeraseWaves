@@ -326,6 +326,15 @@ polymeraseWaveBW <- function(reads1_plus, reads1_minus, reads2_plus, reads2_minu
                 c(parPsi$shape, parPsi$scale, -1), 
                 c(parBas$shape, parBas$scale, -1))
         }
+        else if(emissionDistAssumption == "2waves") {
+            ePrDist <- c("gamma", "gamma", "gamma")
+            parInt  <- RgammaMLE(gene[c(1:uTrans)])
+            parPsi  <- RgammaMLE(gene[c((uTrans+1):iTrans)])
+            parBas  <- RgammaMLE(gene[c((iTrans+1):NROW(gene))])
+            ePrVars <- data.frame(c(parInt$mean, sqrt(parInt$var), -1), 
+                c(parPsi$shape, parPsi$scale, -1), 
+                c(parBas$shape, parBas$scale, -1))
+        }
         else {
           message("emissionDistAssumption should be set to: 'norm', 'normExp', or 'gamma'.")
           stopifnot(FALSE) ## Stop here.
