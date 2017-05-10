@@ -440,6 +440,16 @@ polymeraseWaveBW <- function(reads1_plus, reads1_minus, reads2_plus, reads2_minu
                     scale=pPNew$scale)
                 BAS <- dgamma(c(min(gene):max(gene)), pBNew$shape, pBNew$scale)
             }
+            else if(emissionDistAssumption == "2waves") {
+                ## Refit and calculate KL-divergence at that point.
+                pPNew <- RgammaMLE(gene[c((DTs+1):DTe)])
+                pBNew <- RgammaMLE(gene[c((DTe+1):NROW(gene))])
+
+                ## Estimate KL-divergence.
+                PSI <- dgamma(c(min(gene):max(gene)), shape=pPNew$shape, 
+                    scale=pPNew$scale)
+                BAS <- dgamma(c(min(gene):max(gene)), pBNew$shape, pBNew$scale)
+            }
             minD2 <- 1e-300
             KLdivHMM <- sum((PSI*log((PSI+minD2)/(BAS+minD2))))
 
